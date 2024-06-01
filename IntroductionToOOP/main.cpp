@@ -61,6 +61,27 @@ public:
 		cout << "CopyAssignment: \t" << this << endl;
 		return *this;
 	}
+	Point& operator++() // prefix increment
+	{
+		x++;
+		y++;
+		return *this;
+	}
+	Point operator++(int)	//suffix increment
+	{
+		Point old = *this;
+		x++;
+		y++;
+		return old;
+	}
+
+	Point& operator()(double x, double y)
+	{
+		//Function-call operator
+		set_x(x);
+		set_y(y);
+		return *this;
+	}
 	//Methods
 	double distance(const Point& other)const
 	{
@@ -73,14 +94,52 @@ public:
 	{
 		cout << "X = " << x << "\tY = " << y << endl;
 	}
+
 };
 
-double Distance(const Point& A, const Point& B);
+double Distance(const Point& A, const Point& B)
+{
+	double x_distance = A.get_x() - B.get_x();
+	double y_distance = A.get_y() - B.get_y();
+	double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
+	return distance;
+}
+
+Point operator+(const Point& left, const Point& right)
+{
+	Point result;
+	result.set_x(left.get_x() + right.get_x());
+	result.set_y(left.get_y() + right.get_y());
+	return result;
+}
+
+bool operator==(const Point& left, const Point& right)
+{
+	/*if (left.get_x() == right.get_x() && left.get_y() == right.get_y()) return true;
+	else return false;*/
+	return left.get_x() == right.get_x() && left.get_y() == right.get_y();
+}
+
+std::ostream& operator<<(ostream& os, const Point& obj)
+{
+	return os << "X = " << obj.get_x() << "\tY = " << obj.get_y();
+}
+
+std::istream& operator>>(istream& is, Point& obj)
+{
+	double x, y;
+	is >> x >> y;
+	obj(x, y);
+	return is;
+}
+
 
 
 //#define STRUCT_POINT
 //#define DISTANCE_CHECK
 //#define CONSTRUCTORS_CHECK
+//#define ASSIGNMENT_CHECK
+//#define OPERATORS_CHECK
 
 void main()
 {
@@ -143,6 +202,7 @@ void main()
 	D.print();
 #endif // CONSTRUCTORS_CHECK
 
+#ifdef ASSIGNMENT_CHECK
 	//Point A(2, 3);
 	////Point B = A; //CopyConstructor
 	//Point B;
@@ -155,14 +215,30 @@ void main()
 	B.print();
 	C.print();
 
+#endif // ASSIGNMENT_CHECK
 
-	
+#ifdef OPERATORS_CHECK
+
+	Point A(2, 3);
+	Point B(7, 8);
+	Point C = A + B;
+	A.print();
+	B.print();
+	C.print();
+	Point D = ++C;
+	C.print();
+	D.print();
+
+	cout << (C == D) << endl;
+#endif // OPERATORS_CHECK
+
+	Point A(2, 3);
+
+	cout << "Введите координаты точки: "; 
+	cin >> A;
+	cout << A << endl;
+
 }
 
-double Distance(const Point& A, const Point& B)
-{
-	double x_distance = A.get_x() - B.get_x();
-	double y_distance = A.get_y() - B.get_y();
-	double distance = sqrt(x_distance * x_distance + y_distance * y_distance);
-	return distance;
-}
+
+
