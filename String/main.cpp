@@ -116,15 +116,12 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 
 String operator+(const String& left, const String& right)
 {
-	//Hello + World = HelloWorld;
-	//String cat = left.get_size() + right.get_size() - 1;	//explicit Constructor невозможно вызвать вот так,
-	String cat(left.get_size() + right.get_size() - 1);		//но его всегда можно выбвать вот так
+	
+	String cat(left.get_size() + right.get_size() - 1);		
 	for (int i = 0; i < left.get_size(); i++)
 		cat[i] = left[i];
-	//cat.get_str()[i] = left.get_str()[i];
 	for (int i = 0; i < right.get_size(); i++)
 		cat[i + left.get_size() - 1] = right[i];
-	//cat.get_str()[i + left.get_size() - 1] = right.get_str()[i];
 	return cat;
 }
 
