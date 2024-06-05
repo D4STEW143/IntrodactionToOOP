@@ -1,13 +1,12 @@
-п»ї//Fraction
 #include<iostream>
 
 using namespace std;
 
 class Fraction
 {
-	int integer;	//С†РµР»РѕРµ
-	int numerator;  //С‡РёСЃР»РёС‚РµР»СЊ
-	int denominator;//Р·РЅР°РјРµРЅР°С‚РµР»СЊ
+	int integer;	//целое
+	int numerator;  //числитель
+	int denominator;//знаменатель
 public:
 	int get_integer()const
 	{
@@ -76,6 +75,7 @@ public:
 		cout << "Destruct:\t\t" << this << endl;
 	}
 	//Operators
+	//Оператор копирования
 	Fraction& operator=(const Fraction& other)
 	{
 		this->integer = other.integer;
@@ -97,26 +97,26 @@ public:
 		else if (integer == 0)cout << 0;
 		cout << endl;
 	}
-	Fraction& to_improper() //РІ РЅРµРїСЂР°РІРёР»СЊРЅСѓСЋ РґСЂРѕР±СЊ
+	Fraction& to_improper() 
 	{
 		numerator += integer * denominator;
 		integer = 0;
 		return *this;
-	}
+	}//в неправильную
 	Fraction& to_proper()
 	{
 		integer += numerator / denominator;
 		numerator %= denominator;
 		return *this;
-	}
+	}//в правильную
 	Fraction inverted()const
 	{
 		Fraction inverted = *this;
 		inverted.to_improper();
-		swap(inverted.numerator, inverted.denominator); // РјРµРЅСЏРµС‚ РјРµСЃС‚Р°РјРё РґРІРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
+		swap(inverted.numerator, inverted.denominator); 
 
 		return inverted;
-	}
+	}//перевернуть 
 	Fraction& reduce()
 	{
 
@@ -129,12 +129,12 @@ public:
 			more = less;
 			less = rest;
 		} while (rest);
-		int GCD = more; // Greatest Common Divisor
+		int GCD = more; 
 		numerator /= GCD;
 		denominator /= GCD;
 
 		return *this;
-	}
+	}//сократить через наибольший общий делитель
 	Fraction& operator++()
 	{
 		++integer;
@@ -146,14 +146,6 @@ public:
 		integer++;
 		return old;
 	}
-	Fraction& operator*=(const Fraction& other)
-	{
-		return *this = *this * other;
-	}
-	Fraction& operator/=(const Fraction& other)
-	{
-		return *this = *this / other;
-	}
 	explicit operator int()
 	{
 		return integer;
@@ -163,40 +155,17 @@ public:
 		return (integer + ((double)numerator / denominator));
 	}
 
+
 };
-
-Fraction operator*(Fraction left, Fraction right)
-{
-	left.to_improper();
-	right.to_improper();
-
-	/*Fraction product;
-	product.set_numerator(left.get_numerator() * right.get_numerator());
-	product.set_denominator(left.get_denominator() * right.get_denominator());
-	return product;*/
-
-	/*Fraction prod
-	(
-		left.get_numerator()*right.get_numerator(),
-		left.get_denominator()*right.get_denominator()
-	);
-	return prod;*/
-
-	return Fraction
-	(	left.get_numerator() * right.get_numerator(),
-		left.get_denominator() * right.get_denominator()
-	).to_proper();// РЎРѕР·РґР°С‘С‚СЃСЏ РІСЂРµРјРµРЅРЅС‹Р№ Р±РµР·С‹РјСЏРЅРЅС‹Р№ РѕР±СЉРµРєС‚ Рё СЃСЂР°Р·Сѓ Р¶Рµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РЅР° РјРµСЃС‚Рѕ РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё
-	// Р’СЂРµРјРµРЅРЅС‹Рµ Р±РµР·С‹РјСЏРЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ СЃСѓС‰РµСЃС‚РІСѓСЋС‚ Р»РёС€СЊ РІ РїСЂРµРґРµР»Р°С… РѕРґРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
-
-}
-
-Fraction operator/(const Fraction& left, const Fraction& right)
-{
-	return left * right.inverted();
-}
 
 Fraction operator+(Fraction left, Fraction right)
 {
+	/*left.to_improper();
+	right.to_improper();
+	return Fraction(
+		left.get_numerator() + right.get_numerator(),
+
+		).to_proper().reduce();*/
 	left.to_improper();
 	right.to_improper();
 
@@ -207,108 +176,25 @@ Fraction operator+(Fraction left, Fraction right)
 	).to_proper().reduce();
 }
 
-bool operator==(Fraction left, Fraction right)
+Fraction operator*(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
-	return left.get_numerator() * right.get_denominator() ==
-		right.get_numerator() * left.get_denominator();
+
+	return Fraction
+	(left.get_numerator() * right.get_numerator(),
+		left.get_denominator() * right.get_denominator()
+	).to_proper();
+
 }
-
-bool operator!=(const Fraction& left, const Fraction& right)
-{
-	return !(left == right);
-}
-
-bool operator>(Fraction left, Fraction right)
-{
-	left.to_improper();
-	right.to_improper();
-	return
-		left.get_numerator() * right.get_denominator() >
-		right.get_numerator() * left.get_denominator();
-}
-
-bool operator<(Fraction left, Fraction right)
-{
-	left.to_improper();
-	right.to_improper();
-	return
-		left.get_numerator() * right.get_denominator() <
-		right.get_numerator() * left.get_denominator();
-}
-
-bool operator>=(const Fraction& left, const Fraction& right)
-{
-	// return left > right || left == right;
-	return !(left < right);
-}
-
-bool operator<=(const Fraction& left, const Fraction& right)
-{
-	return !(left > right);
-}
-
-
-//#define CONSTRUCTORS_CHECK
 
 void main()
 {
-	setlocale(LC_ALL, " ");
-
-#ifdef CONSTRUCTORS_CHECK
-	Fraction A;		//Default constructor
-	A.print();
-
-	Fraction B = 5; //Single-argument constructor
-	B.print();
-
-	Fraction C(1, 2);
-	C.print();
-
-	Fraction D(2, 3, 4);
-	D.print();
-
-	Fraction E = D; //Copy constructor
-	E.print();
-
-	Fraction F;
-	F = E;		//Copy assignment
-	F.print();
-#endif // CONSTRUCTORS_CHECK
-
-	Fraction A(1, 2, 3);
-	Fraction B(2, 3, 4);
-	Fraction C = A * B;
-	A.print();
-	B.print();
-	C.print();
-
-
-	Fraction A(-2, 3, 5);
-	Fraction B(-5, 6, 7);
-	Fraction C = A + B;
-	C.print();
-
-	Fraction H(5, 3, 4);
-	Fraction I(7, 1, 7);
-	Fraction J = H * I;
-	J.print();
-
-	Fraction K(7, 2, 3);
-	Fraction L(2, 1, 8);
-	Fraction M = K / L;
-	M.print();
-
-	++K;
-	K.print();
-	L++;
-	L.print();
-
-	Fraction O(5, 3, 4);
-	cout << (O == H) << endl;
-
-
-
-
+	setlocale(LC_ALL, "");
+	Fraction T1(1, 5, 8);
+	Fraction T2(2, 7, 8);
+	Fraction Tm = T1 * T2;
+	Fraction Tp = T1 + T2;
+	Tm.print();
+	Tp.print();
 }
