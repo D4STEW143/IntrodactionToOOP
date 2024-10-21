@@ -1,175 +1,197 @@
-#include<iostream>
-#include<conio.h>
-#include"stdlib.h"
+﻿#include<iostream>
 
 using namespace std;
 
-class Figure
+class Shape
 {
 public:
-	virtual int one_side_length() = 0;
-	virtual int perimeter() = 0;
-	virtual int square() = 0;
-	virtual void print() = 0;
+    virtual void get_Properties() const = 0;
+    virtual double get_area() const = 0;
+    virtual double get_perimeter() const = 0;
+    virtual void draw() const = 0;
+    virtual ~Shape() = 0;
+};
+Shape::~Shape() {};
+
+class Rectangle : public Shape
+{
+private:
+    int width, height;
+public:
+    Rectangle(int w = 10, int h = 5) : width(w), height(h) {}
+    ~Rectangle()override {}
+
+    void get_Properties() const override
+    {
+        cout << " Width = " << width << ", Height = " << height << endl;
+    }
+
+    double get_area() const override
+    {
+        return width * height;
+    }
+
+    double get_perimeter() const override
+    {
+        return 2 * (width + height);
+    }
+
+    void draw() const override
+    {
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                cout << "# ";
+            }
+            cout << endl;
+        }
+    }
 };
 
-class Square :public Figure
+class Square : public Rectangle
 {
-	int side_length, x, y;
+private:
+    int size;
 public:
-	int get_x()const
-	{
-		return x;
-	}
-	int get_y()const
-	{
-		return y;
-	}
-	int get_side_length()const
-	{
-		return side_length;
-	}
-	void set_x(int x)
-	{
-		this->x = x;
-	}
-	void set_y(int y)
-	{
-		this->y = y;
-	}
-	void set_side_length(int side_length)
-	{
-		this->side_length = side_length;
-	}
-
-	Square()
-	{
-		cout << "Square are constructed by\t" << this << endl;
-	}
-	Square(int side_length): Square()
-	{
-		set_side_length(side_length);
-		set_x(side_length);
-		set_y(side_length);
-	}
-	//Square(int x, int y):Square(side_length)
-	//{
-	//	set_side_length(x);
-	//	/*set_side_length(x);
-	//	set_x(x);
-	//	set_y(y);*/
-	//	
-	//}
-	~Square()
-	{
-		cout << "Square are destructed by\t" << this << endl;
-	}
-
-	int one_side_length()
-	{
-		return get_side_length();
-	}
-	int perimeter()
-	{
-		return (get_x() * 2) + (get_y() * 2);
-	}
-	int square()
-	{
-		return get_x() * get_y();
-	}
-	void print()
-	{
-		for (int i = 0; i < x; i++)
-		{
-			cout << "+";
-		}
-		cout << endl;
-		for (int i = 0; i < y - 2; i++)
-		{
-			cout << "+";
-			for (int j = 0; j < x - 2; j++) { cout << " ";}
-			cout << "+";
-			cout << endl;
-		}
-		for (int i = 0; i < x; i++)
-		{
-			cout << "+";
-		}
-		cout << endl;
-	}
+    Square(int Square = 7) : Rectangle(Square, Square) {}
+    ~Square()override {}
 };
 
-class Rectangle :public Square
+class Circle :public Shape
 {
-	int side_length, x, y;
+    double radius;
 public:
-	int get_x()const
-	{
-		return x;
-	}
-	int get_y()const
-	{
-		return y;
-	}
-	int get_side_length()const
-	{
-		return side_length;
-	}
-	void set_x(int x)
-	{
-		this->x = x;
-	}
-	void set_y(int y)
-	{
-		this->y = y;
-	}
-	void set_side_length(int side_length)
-	{
-		this->side_length = side_length;
-	}
+    Circle(double radius = 5) :radius(radius) {}
+    ~Circle()override {}
+    void get_Properties() const override
+    {
+        cout << "Diametr = " << radius * 2 << endl;
+    }
 
-	Rectangle()
-	{
-		cout << "Rectangle are constructed by\t" << this << endl;
-	}
-	Rectangle(int x, int y):Rectangle()
-	{
-		set_side_length(x);
-		set_side_length(x);
-		set_x(x);
-		set_y(y);
-		
-	}
-	~Rectangle()
-	{
-		cout << "Rectangle are destructed by\t" << this << endl;
-	}
+    double get_area() const override
+    {
+        return 3.14 * radius * radius;
+    }
 
-	int one_side_length()
-	{
-		return get_x(), get_y();
-	}
-	int perimeter()
-	{
-		return (get_x() * 2) + (get_y() * 2);
-	}
-	int square()
-	{
-		return get_x() * get_y();
-	}
-	void print()
-	{
-		Square::print();
-	}
+    double get_perimeter() const override
+    {
+        return 2 * 3.14 * radius;
+    }
+
+    void draw() const override
+    {
+
+        for (int i = -radius; i <= radius; i++)
+        {
+            for (int j = -radius; j <= radius; j++)
+            {
+                if (sqrt(i * i + j * j) <= radius * 1.05)
+                {
+                    cout << "@ ";
+                }
+                else
+                {
+                    cout << "  ";
+                }
+            }
+            cout << endl;
+        }
+    }
+};
+
+class Triangle : public Shape
+{
+private:
+    int a, b, c; // Стороны треугольника
+public:
+    Triangle(int a, int b, int c) : a(a), b(b), c(c) {}
+    Triangle() :a(3), b(4), c(5) {}
+    ~Triangle()override {}
+    void get_Properties() const override
+    {
+        cout << "Sides = " << a << ", " << b << ", " << c << endl;
+    }
+
+    double get_area() const override
+    {
+        double s = ((double)a + b + c) / 2;
+        return sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+
+    double get_perimeter() const override
+    {
+        return a + b + c;
+    }
+
+    void draw() const override
+    {
+        int height = 2 * get_area() / a;
+        for (int i = 1; i <= height; i++)
+        {
+            for (int j = 0; j < height - i; j++)
+            {
+                cout << "  ";
+            }
+            for (int j = 0; j < 2 * i - 1; j++)
+            {
+                cout << "^ ";
+            }
+            cout << endl;
+        }
+    }
 };
 
 void main()
 {
-	setlocale(LC_ALL, "");
-	Square sqr1(4);
-	cout << sqr1.get_x() << endl;
-	sqr1.print();
-	Rectangle rec1(9, 4);
-	cout << rec1.one_side_length() << endl;
-	rec1.print();
+    srand(time(NULL));
+    setlocale(LC_ALL, " ");
+    const int SIZE = 4;
+    Shape** shapes = new Shape * [SIZE];
+    int arr[SIZE]{};
+    bool flag = true;
+    int i = 0;
+    do
+    {
+        flag = true;
+        int Key = rand() % 4;
+        for (int j = 0; j < i; j++)
+        {
+            if (Key == arr[j]) { flag = false; break; }
+        }
+        if (flag)
+        {
+            arr[i] = Key;
+            switch (Key)
+            {
+            case 0:
+                shapes[i] = new Square();
+                break;
+
+            case 1:
+                shapes[i] = new Rectangle();
+                break;
+            case 2:
+                shapes[i] = new Circle();
+                break;
+            case 3:
+                shapes[i] = new Triangle();
+                break;
+            }
+
+            i++;
+        }
+    } while (i < SIZE);
+    for (int i = 0; i < SIZE; i++)
+    {
+        cout << "Area: " << shapes[i]->get_area() << endl;
+        cout << "Perimeter: " << shapes[i]->get_perimeter() << endl;
+        shapes[i]->get_Properties();
+        shapes[i]->draw();
+    }
+    for (int i = 0; i < SIZE; i++)delete shapes[i];
+    delete[]shapes;
+
+
+
 }
